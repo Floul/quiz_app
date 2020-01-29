@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quiz_app/blocs/vocabulary_bloc.dart';
-import 'package:quiz_app/di/bloc_injection.dart';
+import 'package:quiz_app/di/bloc_provider.dart';
 import 'package:quiz_app/models/word_model.dart';
 import 'package:quiz_app/ui/screens/quiz_screen.dart';
 import 'package:quiz_app/ui/widgets/list_tile.dart';

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:quiz_app/blocs/quiz_bloc.dart';
+import 'package:quiz_app/di/bloc_provider.dart';
 import 'package:quiz_app/models/word_model.dart';
 import 'package:quiz_app/ui/widgets/quiz_table.dart';
 
@@ -13,7 +14,7 @@ class QuizScreen extends StatefulWidget {
 
 class _QuizScreenState extends State<QuizScreen> {
   StreamSubscription _streamSubscription;
-
+  QuizBloc quizBloc = QuizBloc();
   @override
   void initState() {
     _listen();
@@ -23,8 +24,11 @@ class _QuizScreenState extends State<QuizScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Center(child: QuizTable()),
+      body: BlocProvider(
+        bloc: quizBloc,
+        child: SafeArea(
+          child: Center(child: QuizTable()),
+        ),
       ),
     );
   }

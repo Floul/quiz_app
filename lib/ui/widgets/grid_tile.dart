@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:quiz_app/blocs/events.dart';
 import 'package:quiz_app/blocs/quiz_bloc.dart';
+import 'package:quiz_app/di/bloc_provider.dart';
 import 'package:quiz_app/models/word_model.dart';
 
 class MyGridTile extends StatelessWidget {
@@ -12,6 +13,7 @@ class MyGridTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    QuizBloc quizBloc = BlocProvider.of(context);
     var tileColor = Colors.white;
     return StreamBuilder<GuessEvent>(
         stream: quizBloc.guess,

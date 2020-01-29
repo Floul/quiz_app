@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:quiz_app/blocs/quiz_bloc.dart';
-import 'package:quiz_app/di/bloc_injection.dart';
+import 'package:quiz_app/di/bloc_provider.dart';
 import 'package:quiz_app/models/word_model.dart';
 import 'package:quiz_app/ui/widgets/grid_tile.dart';
 
 class QuizTable extends StatelessWidget {
+  QuizBloc quizBloc;
   @override
   Widget build(BuildContext context) {
+    quizBloc = BlocProvider.of(context);
     return StreamBuilder(
         stream: quizBloc.theWord,
         builder: (BuildContext context, AsyncSnapshot<Word> snapshot) {

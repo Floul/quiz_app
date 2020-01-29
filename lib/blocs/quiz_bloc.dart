@@ -4,12 +4,13 @@ import 'dart:math';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:quiz_app/blocs/events.dart';
 import 'package:quiz_app/database/dao.dart';
+import 'package:quiz_app/di/bloc_provider.dart';
 import 'package:quiz_app/models/round_stats.dart';
 import 'package:quiz_app/models/word_model.dart';
 import 'package:quiz_app/repository/repository.dart';
 import 'package:quiz_app/ui/screens/end_of_the_game_screen.dart';
 
-class QuizBloc {
+class QuizBloc extends BlocBase {
   Dao dao = Dao();
 
   final _repository = Repository();
@@ -53,26 +54,39 @@ class QuizBloc {
   }
 
   evaluateGuess(Word word, Key key) {
-    _tries++;
-    if (_tries < 3) {
-      // do nothing if user wants to tap more than 2 times
-      if (word.original == _currentTheWord.original) {
-        guessIsCorrect(key);
+    if (word.original == _currentTheWord.original) {
+      guessIsCorrect(key);
+    } else {
+      _tries++;
+      if (_tries < 2) {
+        _guessController.sink.add(WrongGuessEvent(key));
       } else {
-        if (_tries < 3) {
-          _guessController.sink.add(WrongGuessEvent(key));
-        } else
-          getNextSet();
-      }
-      if (_tries == 2) {
+        _guessController.sink.add(WrongGuessEvent(key));
         guessIsWrong();
       }
     }
+
+//    _tries++;
+//    if (_tries < 3) {
+//      // do nothing if user wants to tap more than 2 times
+//      if (word.original == _currentTheWord.original) {
+//        guessIsCorrect(key);
+//      } else {
+//        if (_tries < 3) {
+//          _guessController.sink.add(WrongGuessEvent(key));
+//        } else
+//          getNextSet();
+//      }
+//      if (_tries == 2) {
+//        guessIsWrong();
+//      }
+//    }
   }
 
   void guessIsWrong() {
     _currentTheWord.status = Word.guessedWrong;
     _roundStats.wrongAnswersAmount++;
+    dao.update(_currentTheWord);
     getNextSet();
   }
 
@@ -88,7 +102,7 @@ class QuizBloc {
     await Future.delayed(Duration(milliseconds: 300));
     _round++;
     _tries = 0;
-    if (_round < 5) {
+    if (_round < 6) {
       _currentSet = _allWords.skip(_wordsTaken).take(4).toList();
       _wordsTaken += 4;
       _currentTheWord = _currentSet[_random.nextInt(_currentSet.length)];
@@ -111,4 +125,4 @@ class QuizBloc {
   }
 }
 
-final quizBloc = QuizBloc();
+//final quizBloc = QuizBloc();
