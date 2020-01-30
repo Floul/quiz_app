@@ -33,14 +33,17 @@ class MyGridTile extends StatelessWidget {
               quizBloc.evaluateGuess(currentWord, key);
             },
             child: Container(
-              width: 100,
-              height: 100,
               color: tileColor,
-              child: Center(
-                child: Text(
-                  "${currentWord.translated}",
-                  style: TextStyle(fontSize: 24),
-                ),
+              child: Column(
+                children: <Widget>[
+                  Image.asset(currentWord.image),
+                  Center(
+                    child: Text(
+                      "${currentWord.translated}",
+                      style: TextStyle(fontSize: 24),
+                    ),
+                  ),
+                ],
               ),
             ),
           );

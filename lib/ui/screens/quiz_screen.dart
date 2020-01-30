@@ -24,11 +24,10 @@ class _QuizScreenState extends State<QuizScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       body: BlocProvider(
         bloc: quizBloc,
-        child: SafeArea(
-          child: Center(child: QuizTable()),
-        ),
+        child: Center(child: QuizTable()),
       ),
     );
   }

@@ -5,25 +5,24 @@ import 'package:quiz_app/models/word_model.dart';
 import 'package:quiz_app/ui/widgets/grid_tile.dart';
 
 class QuizTable extends StatelessWidget {
-  QuizBloc quizBloc;
   @override
   Widget build(BuildContext context) {
-    quizBloc = BlocProvider.of(context);
+    QuizBloc quizBloc = BlocProvider.of(context);
     return StreamBuilder(
         stream: quizBloc.theWord,
         builder: (BuildContext context, AsyncSnapshot<Word> snapshot) {
           if (snapshot.hasData) {
             var theWord = snapshot.data;
             return Column(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 Text(
                   "${theWord.original}",
-                  style: TextStyle(fontSize: 24),
+                  style: TextStyle(fontSize: 28),
                 ),
                 Container(
-                  width: 200,
-                  height: 200,
+                  width: 300,
+                  height: 300,
                   child: StreamBuilder(
                       stream: quizBloc.words,
                       builder: (context, AsyncSnapshot<List<Word>> snapshot) {
@@ -45,7 +44,7 @@ class QuizTable extends StatelessWidget {
               ],
             );
           } else {
-            return Container();
+            return CircularProgressIndicator();
           }
         });
   }

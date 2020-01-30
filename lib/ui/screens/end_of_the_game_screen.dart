@@ -10,8 +10,8 @@ class EndOfTheGameScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-          child: Center(
+      appBar: AppBar(),
+      body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -25,7 +25,7 @@ class EndOfTheGameScreen extends StatelessWidget {
             ),
           ],
         ),
-      )),
+      ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           Navigator.pushAndRemoveUntil(
