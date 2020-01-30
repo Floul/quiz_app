@@ -119,7 +119,7 @@ class AppDatabase {
           .toMap(),
       Word(
               'Tomorrow',
-              'Привіт',
+              'Завтра',
               'Привіт, як справи?',
               'assets/images/image_placeholder.png',
               'assets/images/image_placeholder.png')

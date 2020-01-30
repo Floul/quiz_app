@@ -14,7 +14,8 @@ class MyGridTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     QuizBloc quizBloc = BlocProvider.of(context);
-    var tileColor = Colors.white;
+    Color tileColor = Colors.white;
+    double opacity = 1;
     return StreamBuilder<GuessEvent>(
         stream: quizBloc.guess,
         builder: (BuildContext context, AsyncSnapshot<GuessEvent> snapshot) {
@@ -23,8 +24,10 @@ class MyGridTile extends StatelessWidget {
             if (event.key == key) {
               if (event is RightGuessEvent) {
                 tileColor = Colors.green;
+                opacity = 0.5;
               } else {
                 tileColor = Colors.red;
+                opacity = 0.5;
               }
             }
           }
@@ -32,19 +35,23 @@ class MyGridTile extends StatelessWidget {
             onTap: () {
               quizBloc.evaluateGuess(currentWord, key);
             },
-            child: Container(
-              color: tileColor,
-              child: Column(
-                children: <Widget>[
-                  Image.asset(currentWord.image),
-                  Center(
-                    child: Text(
-                      "${currentWord.translated}",
-                      style: TextStyle(fontSize: 24),
+            child: AnimatedOpacity(
+              opacity: opacity,
+              child: Container(
+                color: tileColor,
+                child: Column(
+                  children: <Widget>[
+                    Image.asset(currentWord.image),
+                    Center(
+                      child: Text(
+                        "${currentWord.translated}",
+                        style: TextStyle(fontSize: 24),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
+              duration: Duration(milliseconds: 150),
             ),
           );
         });
