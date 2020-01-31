@@ -16,13 +16,13 @@ class MyGridTile extends StatelessWidget {
     QuizBloc quizBloc = BlocProvider.of(context);
     Color tileColor = Colors.white;
     double opacity = 1;
-    return StreamBuilder<GuessEvent>(
-        stream: quizBloc.guess,
-        builder: (BuildContext context, AsyncSnapshot<GuessEvent> snapshot) {
+    return StreamBuilder<GuessStates>(
+        stream: quizBloc.guessStatus,
+        builder: (BuildContext context, AsyncSnapshot<GuessStates> snapshot) {
           if (snapshot.hasData) {
-            GuessEvent event = snapshot.data;
+            GuessStates event = snapshot.data;
             if (event.key == key) {
-              if (event is RightGuessEvent) {
+              if (event is RightGuessState) {
                 tileColor = Colors.green;
                 opacity = 0.5;
               } else {
@@ -33,7 +33,7 @@ class MyGridTile extends StatelessWidget {
           }
           return GestureDetector(
             onTap: () {
-              quizBloc.evaluateGuess(currentWord, key);
+              quizBloc.evaluateGuess.add(GuessEvent(key, currentWord));
             },
             child: AnimatedOpacity(
               opacity: opacity,
@@ -51,7 +51,7 @@ class MyGridTile extends StatelessWidget {
                   ],
                 ),
               ),
-              duration: Duration(milliseconds: 150),
+              duration: Duration(milliseconds: 100),
             ),
           );
         });

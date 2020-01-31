@@ -16,7 +16,8 @@ class QuizBloc extends BlocBase {
   final _repository = Repository();
   final _wordsController = StreamController<List<Word>>();
   final _theWordController = StreamController<Word>();
-  final _guessController = StreamController<GuessEvent>.broadcast();
+  final _guessOutputController = StreamController<GuessStates>.broadcast();
+  final _guessInputController = StreamController<GuessEvent>();
   final _navigationController = StreamController();
 
   List<Word> _allWords = List();
@@ -32,12 +33,16 @@ class QuizBloc extends BlocBase {
 
   get theWord => _theWordController.stream;
 
-  get guess => _guessController.stream;
+  get guessStatus => _guessOutputController.stream;
 
   get navigation => _navigationController.stream;
 
+  get evaluateGuess => _guessInputController.sink;
+
   QuizBloc() {
     _loadWords();
+    _guessInputController.stream
+        .listen((guess) => _evaluateGuess(guess.word, guess.key));
   }
 
   Future<void> _loadWords() async {
@@ -53,15 +58,15 @@ class QuizBloc extends BlocBase {
     getNextSet();
   }
 
-  evaluateGuess(Word word, Key key) {
+  _evaluateGuess(Word word, Key key) {
     if (word.original == _currentTheWord.original) {
       guessIsCorrect(key);
     } else {
       _tries++;
       if (_tries < 2) {
-        _guessController.sink.add(WrongGuessEvent(key));
+        _guessOutputController.sink.add(WrongGuessState(key));
       } else {
-        _guessController.sink.add(WrongGuessEvent(key));
+        _guessOutputController.sink.add(WrongGuessState(key));
         guessIsWrong();
       }
     }
@@ -91,7 +96,7 @@ class QuizBloc extends BlocBase {
   }
 
   void guessIsCorrect(Key key) {
-    _guessController.sink.add(RightGuessEvent(key));
+    _guessOutputController.sink.add(RightGuessState(key));
     _currentTheWord.status = Word.guessedRight;
     _roundStats.correctAnswersAmount++;
     dao.update(_currentTheWord);
@@ -119,7 +124,7 @@ class QuizBloc extends BlocBase {
 
   dispose() {
     _wordsController.close();
-    _guessController.close();
+    _guessOutputController.close();
     _theWordController.close();
     _navigationController.close();
   }
